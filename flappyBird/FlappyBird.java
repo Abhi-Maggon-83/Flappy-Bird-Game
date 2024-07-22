@@ -1,26 +1,23 @@
 package flappyBird;
 
-//GUI Styling Libraries
+// GUI Styling Libraries
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-// Importing library to play msuic
+// Importing library to play music
 import java.io.File;
 import java.io.IOException;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-//Functionality Libraries
+// Functionality Libraries
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,7 +27,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-//GUI Window
+// GUI Window
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
@@ -52,9 +49,14 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
 	public Random rand;
 
+	public Clip audioClip;
+	public JFrame jframe;
+	public Timer timer;
+	public long gameOverTime;
+
 	public FlappyBird() {
-		JFrame jframe = new JFrame();
-		Timer timer = new Timer(20, this);
+		jframe = new JFrame();
+		timer = new Timer(20, this);
 
 		renderer = new Renderer();
 		rand = new Random();
@@ -114,7 +116,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 			addColumn(true);
 
 			// Playing music again
-			play("C:\\Users\\msi\\Desktop\\FlappyBird\\flappyBird\\song.wav");
+			play("C:\\Users\\abhi8\\OneDrive\\Desktop\\FlappyBird2\\FlappyBird\\flappyBird\\song.wav");
 
 			gameOver = false;
 		}
@@ -170,6 +172,7 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 				if (column.intersects(bird)) {
 					gameOver = true;
 					audioClip.close();
+					gameOverTime = System.currentTimeMillis();
 
 					if (bird.x <= column.x) {
 						bird.x = column.x - bird.width;
@@ -187,14 +190,21 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 			if (bird.y > HEIGHT - 120 || bird.y < 0) {
 				gameOver = true;
 				audioClip.close();
-
+				gameOverTime = System.currentTimeMillis();
 			}
 
 			if (bird.y + yMotion >= HEIGHT - 120) {
 				bird.y = HEIGHT - 120 - bird.height;
 				gameOver = true;
 				audioClip.close();
+				gameOverTime = System.currentTimeMillis();
+			}
+		}
 
+		if (gameOver) {
+			long elapsed = System.currentTimeMillis() - gameOverTime;
+			if (elapsed >= 3000) {
+				System.exit(0);
 			}
 		}
 
@@ -237,8 +247,6 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 
 	// -----------------------------------------------------------------------------------
 
-	Clip audioClip;
-
 	void play(String audioFilePath) {
 		File audioFile = new File(audioFilePath);
 
@@ -265,7 +273,6 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 			System.out.println("Error playing the audio file.");
 			ex.printStackTrace();
 		}
-
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -287,29 +294,21 @@ public class FlappyBird implements ActionListener, MouseListener, KeyListener {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-
-	}
+	public void keyPressed(KeyEvent e) {}
 
 }
